@@ -10,19 +10,9 @@ export default function Navbar() {
   const [user, setUser] = useState<User | null>(null);
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
-  const [theme, setTheme] = useState('light');
 
   useEffect(() => {
     setMounted(true);
-
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme) {
-      setTheme(savedTheme);
-      document.documentElement.setAttribute('data-theme', savedTheme);
-    } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-      setTheme('dark');
-      document.documentElement.setAttribute('data-theme', 'dark');
-    }
 
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser as User);
@@ -65,12 +55,6 @@ export default function Navbar() {
     }
   };
 
-  const toggleTheme = (newTheme: string) => {
-    setTheme(newTheme);
-    localStorage.setItem('theme', newTheme);
-    document.documentElement.setAttribute('data-theme', newTheme);
-  };
-
   if (!mounted) return null;
 
   return (
@@ -95,29 +79,6 @@ export default function Navbar() {
         <div style={{ display: 'flex', alignItems: 'center', gap: '24px', fontSize: '0.9rem', fontWeight: '600' }}>
           {user ? (
             <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-              <div style={{ display: 'flex', backgroundColor: 'var(--card-bg, #f3f4f6)', borderRadius: '24px', padding: '4px', boxShadow: '0 2px 10px rgba(0,0,0,0.02)', position: 'relative' }}>
-                {/* Sliding indicator */}
-                <div style={{
-                  position: 'absolute',
-                  top: '4px',
-                  left: theme === 'light' ? '4px' : 'calc(100% - 40px)',
-                  width: '36px',
-                  height: '36px',
-                  backgroundColor: 'var(--bg-color)',
-                  borderRadius: '50%',
-                  boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
-                  transition: 'left 0.3s ease',
-                  zIndex: 0
-                }} />
-                
-                <button onClick={() => toggleTheme('light')} style={{ width: '36px', height: '36px', borderRadius: '50%', border: 'none', backgroundColor: 'transparent', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: theme === 'light' ? 'var(--text-main)' : 'var(--text-muted)', zIndex: 1, transition: 'color 0.3s ease' }}>
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
-                </button>
-                <button onClick={() => toggleTheme('dark')} style={{ width: '36px', height: '36px', borderRadius: '50%', border: 'none', backgroundColor: 'transparent', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: theme === 'dark' ? 'var(--text-main)' : 'var(--text-muted)', zIndex: 1, transition: 'color 0.3s ease' }}>
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-                </button>
-              </div>
-              
               <button style={{ width: '44px', height: '44px', borderRadius: '50%', border: 'none', backgroundColor: 'var(--card-bg, #f3f4f6)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', boxShadow: '0 2px 10px rgba(0,0,0,0.02)' }}>
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted, #6b7280)" strokeWidth="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
                 <div style={{ position: 'absolute', top: '10px', right: '12px', width: '8px', height: '8px', backgroundColor: 'red', borderRadius: '50%', border: '2px solid var(--card-bg, #f3f4f6)' }}></div>

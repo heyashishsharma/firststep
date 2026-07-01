@@ -10,10 +10,10 @@ export default function AboutUs() {
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '80px', flexWrap: 'wrap', gap: '40px' }}>
           <div style={{ maxWidth: '750px' }}>
             <h1 style={{ fontSize: '3.5rem', fontWeight: '700', lineHeight: '1.1', marginBottom: '24px', letterSpacing: '-1px' }}>
-              Meet our team of <span style={{ fontFamily: 'Georgia, serif', fontStyle: 'italic' }}>creators</span>, <span style={{ fontFamily: 'Georgia, serif', fontStyle: 'italic' }}>designers</span>, and world-class <span style={{ fontFamily: 'Georgia, serif', fontStyle: 'italic' }}>problem solvers</span>
+              Empowering Your <span style={{ fontFamily: 'Georgia, serif', fontStyle: 'italic' }}>Curiosity</span>, <span style={{ fontFamily: 'Georgia, serif', fontStyle: 'italic' }}>Through</span>, Interactive<span style={{ fontFamily: 'Georgia, serif', fontStyle: 'italic' }}> Learning </span>
             </h1>
             <p style={{ fontSize: '1.2rem', color: '#555', lineHeight: '1.6', maxWidth: '650px' }}>
-              To be the company our customers want us to be, it takes an <span style={{ fontStyle: 'italic', fontFamily: 'Georgia, serif' }}>eclectic group</span> of passionate operators. Get to know the people <span style={{ fontStyle: 'italic', fontFamily: 'Georgia, serif' }}>leading the way</span> at FIRSTep.
+              At FIRSTep., we transform passive studying into instantly rewarding, active learning experiences.<span style={{ fontStyle: 'italic', fontFamily: 'Georgia, serif' }}>From competitive exams to high-income creative skills,</span>we provide the exact tools you need to succeed. <span style={{ fontStyle: 'italic', fontFamily: 'Georgia, serif' }}>Bridge the gap between your highest ambitions and </span>real-world mastery today.
             </p>
           </div>
 
@@ -45,9 +45,9 @@ export default function AboutUs() {
                 <circle cx="50" cy="50" r="65" stroke="currentColor" strokeWidth="0.5" fill="none" />
                 <circle cx="50" cy="50" r="80" stroke="currentColor" strokeWidth="0.5" fill="none" />
               </svg>
-              <img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&q=80&w=400&h=450" alt="Mia Ward" style={{ width: '80%', height: '90%', objectFit: 'cover', objectPosition: 'top', position: 'relative', zIndex: 1 }} />
+              <img src="/founder.bmp" alt="Ashish Sharma" style={{ width: '80%', height: '90%', objectFit: 'cover', objectPosition: 'top', position: 'relative', zIndex: 1 }} />
             </div>
-            <h3 style={{ fontSize: '1.25rem', fontWeight: '700', marginBottom: '4px' }}>Mia Ward</h3>
+            <h3 style={{ fontSize: '1.25rem', fontWeight: '700', marginBottom: '4px' }}>Ashish Sharma</h3>
             <p style={{ color: '#555', fontStyle: 'italic', fontFamily: 'Georgia, serif', fontSize: '1rem' }}>Founder & CEO</p>
           </div>
 
