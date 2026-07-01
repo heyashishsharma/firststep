@@ -1,26 +1,184 @@
-@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --bg-color: #f6f5f1;
+  --text-main: #111111;
+  --text-muted: #555555;
+  --banner-bg: #6366f1;
+
+  --card-bg: #ffffff;
+  --btn-bg: #111111;
+  --btn-text: #ffffff;
+  --border-color: rgba(0,0,0,0.05);
+  --image-bg: #e5e7eb;
+
+  --font-main: 'Plus Jakarta Sans', sans-serif;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+[data-theme="dark"] {
+  --bg-color: #111111;
+  --text-main: #f6f5f1;
+  --text-muted: #9ca3af;
+  --banner-bg: #4f46e5;
+  
+  --card-bg: #1f1f1f;
+  --btn-bg: #ffffff;
+  --btn-text: #111111;
+  --border-color: rgba(255,255,255,0.05);
+  --image-bg: #374151;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-main);
+  font-family: var(--font-main);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.container {
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+@media (min-width: 768px) {
+  .container {
+    padding: 0 40px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .container {
+    padding: 0 60px;
+  }
+}
+
+/* Typography */
+.hero-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  line-height: 1.1;
+  margin-bottom: 24px;
+  letter-spacing: -1px;
+  max-width: 800px;
+  margin: 0 auto 24px;
+}
+
+@media (min-width: 768px) {
+  .hero-title {
+    font-size: 3.5rem;
+    letter-spacing: -1.2px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .hero-title {
+    font-size: 4.5rem;
+    letter-spacing: -1.5px;
+  }
+}
+
+/* Utilities */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--btn-bg);
+  color: var(--btn-text);
+  font-weight: 600;
+  font-size: 0.9rem;
+  padding: 12px 24px;
+  border-radius: 8px;
+  cursor: pointer;
+  border: none;
+  transition: opacity 0.2s;
+}
+
+.btn:hover {
+  opacity: 0.8;
+}
+
+.btn-sm {
+  padding: 8px 16px;
+  font-size: 0.85rem;
+  border-radius: 6px;
+}
+
+/* Floating Avatars */
+.floating-shape {
+  position: absolute;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  z-index: -1;
+  opacity: 0.6;
+  /* Slight opacity so text on top is more readable */
+}
+
+@media (min-width: 768px) {
+  .floating-shape {
+    opacity: 1;
+    /* Full opacity on larger screens where they are pushed to the side */
+  }
+}
+
+/* Responsive Floating Positioning */
+.float-left-1 { top: 80px; left: 0%; }
+.float-left-2 { top: 220px; left: -5%; }
+.float-left-3 { top: 380px; left: 2%; }
+
+.float-right-1 { top: 60px; right: 2%; }
+.float-right-2 { top: 200px; right: -5%; }
+.float-right-3 { top: 360px; right: 0%; }
+
+@media (min-width: 768px) {
+  .float-left-1 { left: 5%; }
+  .float-left-2 { left: 15%; top: 240px; }
+  .float-left-3 { left: 8%; }
+  
+  .float-right-1 { right: 8%; top: 80px; }
+  .float-right-2 { right: 15%; top: 220px; }
+  .float-right-3 { right: 5%; }
+}
+
+@media (min-width: 1200px) {
+  .float-left-1 { left: calc(50% - 520px); top: 100px; }
+  .float-left-2 { left: calc(50% - 650px); top: 240px; }
+  .float-left-3 { left: calc(50% - 480px); top: 380px; }
+  
+  .float-right-1 { right: calc(50% - 500px); top: 80px; }
+  .float-right-2 { right: calc(50% - 640px); top: 220px; }
+  .float-right-3 { right: calc(50% - 460px); top: 360px; }
+}
+
+/* Scale down shapes on smaller screens to avoid overlapping text heavily */
+@media (max-width: 767px) {
+  .floating-shape {
+    transform: scale(0.6);
+  }
+}
+
+.shape-circle {
+  border-radius: 50%;
+}
+
+.shape-triangle {
+  clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+}
+
+.shape-square {
+  border-radius: 0;
 }
