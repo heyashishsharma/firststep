@@ -10,6 +10,42 @@ export default function Navbar() {
   const [user, setUser] = useState<User | null>(null);
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
+  const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
+  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
+  const [notifications, setNotifications] = useState([
+    { id: 1, title: 'Welcome to FIRSTep!', desc: 'Get started with your first course today.', icon: '🎉', isRead: false }
+  ]);
+  const autoCloseTimerRef = React.useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    if (isNotificationsOpen) {
+      autoCloseTimerRef.current = setTimeout(() => {
+        setIsNotificationsOpen(false);
+      }, 5000);
+      return () => {
+        if (autoCloseTimerRef.current) clearTimeout(autoCloseTimerRef.current);
+      };
+    }
+  }, [isNotificationsOpen]);
+
+  const handlePopupMouseEnter = () => {
+    if (autoCloseTimerRef.current) clearTimeout(autoCloseTimerRef.current);
+  };
+
+  const handlePopupMouseLeave = () => {
+    if (isNotificationsOpen) {
+      if (autoCloseTimerRef.current) clearTimeout(autoCloseTimerRef.current);
+      autoCloseTimerRef.current = setTimeout(() => {
+        setIsNotificationsOpen(false);
+      }, 5000);
+    }
+  };
+
+  const markAllAsRead = () => {
+    setNotifications(notifications.map(n => ({ ...n, isRead: true })));
+  };
+
+  const unreadCount = notifications.filter(n => !n.isRead).length;
 
   useEffect(() => {
     setMounted(true);
@@ -79,16 +115,60 @@ export default function Navbar() {
         <div style={{ display: 'flex', alignItems: 'center', gap: '24px', fontSize: '0.9rem', fontWeight: '600' }}>
           {user ? (
             <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-              <button style={{ width: '44px', height: '44px', borderRadius: '50%', border: 'none', backgroundColor: 'var(--card-bg, #f3f4f6)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', boxShadow: '0 2px 10px rgba(0,0,0,0.02)' }}>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted, #6b7280)" strokeWidth="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-                <div style={{ position: 'absolute', top: '10px', right: '12px', width: '8px', height: '8px', backgroundColor: 'red', borderRadius: '50%', border: '2px solid var(--card-bg, #f3f4f6)' }}></div>
-              </button>
-
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', backgroundColor: 'var(--card-bg, #f3f4f6)', padding: '6px 12px 6px 6px', borderRadius: '24px', cursor: 'pointer', boxShadow: '0 2px 10px rgba(0,0,0,0.02)' }}>
-                <img src={user.photoURL || `https://ui-avatars.com/api/?name=${user.displayName}`} alt="Profile" style={{ width: '32px', height: '32px', borderRadius: '50%' }} />
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted, #6b7280)" strokeWidth="2"><polyline points="6 9 12 15 18 9"/></svg>
+              {/* Notification Icon */}
+              <div style={{ position: 'relative' }}>
+                <button onClick={() => { setIsNotificationsOpen(!isNotificationsOpen); setIsProfileMenuOpen(false); }} style={{ width: '44px', height: '44px', borderRadius: '50%', border: 'none', backgroundColor: 'var(--card-bg, #f3f4f6)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', boxShadow: '0 2px 10px rgba(0,0,0,0.02)', transition: 'transform 0.2s ease', transform: isNotificationsOpen ? 'scale(0.95)' : 'scale(1)' }}>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted, #6b7280)" strokeWidth="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                  {unreadCount > 0 && <div style={{ position: 'absolute', top: '10px', right: '12px', width: '8px', height: '8px', backgroundColor: 'red', borderRadius: '50%', border: '2px solid var(--card-bg, #f3f4f6)' }}></div>}
+                </button>
+                
+                {/* Notifications Dropdown */}
+                <div onMouseEnter={handlePopupMouseEnter} onMouseLeave={handlePopupMouseLeave} style={{ position: 'absolute', top: 'calc(100% + 12px)', right: '-40px', width: '320px', backgroundColor: 'var(--card-bg, white)', borderRadius: '16px', boxShadow: '0 10px 40px rgba(0,0,0,0.08)', padding: '16px', zIndex: 50, transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)', opacity: isNotificationsOpen ? 1 : 0, transform: isNotificationsOpen ? 'translateY(0) scale(1)' : 'translateY(-10px) scale(0.95)', pointerEvents: isNotificationsOpen ? 'auto' : 'none', transformOrigin: 'top right' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+                    <h3 style={{ fontSize: '1.1rem', fontWeight: '700', margin: 0 }}>Notifications</h3>
+                    {unreadCount > 0 && (
+                      <span onClick={markAllAsRead} style={{ fontSize: '0.8rem', color: 'var(--banner-bg, #a855f7)', cursor: 'pointer', fontWeight: '600' }}>Mark all as read</span>
+                    )}
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                    {notifications.length > 0 ? notifications.map(notif => (
+                      <div key={notif.id} style={{ display: 'flex', gap: '12px', padding: '8px', borderRadius: '8px', backgroundColor: notif.isRead ? 'transparent' : 'rgba(0,0,0,0.02)', cursor: 'pointer', transition: 'background-color 0.2s', opacity: notif.isRead ? 0.6 : 1 }}>
+                        <div style={{ width: '40px', height: '40px', borderRadius: '50%', backgroundColor: '#dbeafe', color: '#2563eb', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>{notif.icon}</div>
+                        <div>
+                          <div style={{ fontSize: '0.9rem', fontWeight: '600', marginBottom: '2px' }}>{notif.title}</div>
+                          <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>{notif.desc}</div>
+                        </div>
+                      </div>
+                    )) : (
+                      <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', textAlign: 'center', padding: '16px 0' }}>No notifications</div>
+                    )}
+                  </div>
+                </div>
               </div>
-              <button onClick={handleLogout} style={{ backgroundColor: 'var(--btn-bg)', color: 'var(--btn-text)', border: 'none', cursor: 'pointer', padding: '10px 20px', borderRadius: '8px', fontWeight: '700', fontSize: '0.9rem', transition: 'all 0.2s ease' }}>Log out</button>
+
+              {/* User Profile */}
+              <div style={{ position: 'relative' }}>
+                <div onClick={() => { setIsProfileMenuOpen(!isProfileMenuOpen); setIsNotificationsOpen(false); }} style={{ display: 'flex', alignItems: 'center', gap: '8px', backgroundColor: 'var(--card-bg, #f3f4f6)', padding: '6px 12px 6px 6px', borderRadius: '24px', cursor: 'pointer', boxShadow: '0 2px 10px rgba(0,0,0,0.02)', transition: 'background-color 0.2s ease' }}>
+                  <img src={user.photoURL || `https://ui-avatars.com/api/?name=${user.displayName}`} alt="Profile" style={{ width: '32px', height: '32px', borderRadius: '50%' }} />
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted, #6b7280)" strokeWidth="2" style={{ transition: 'transform 0.3s ease', transform: isProfileMenuOpen ? 'rotate(180deg)' : 'rotate(0)' }}><polyline points="6 9 12 15 18 9"/></svg>
+                </div>
+                
+                {/* Profile Dropdown */}
+                <div style={{ position: 'absolute', top: 'calc(100% + 12px)', right: 0, width: '220px', backgroundColor: 'var(--card-bg, white)', borderRadius: '16px', boxShadow: '0 10px 40px rgba(0,0,0,0.08)', padding: '8px', zIndex: 50, transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)', opacity: isProfileMenuOpen ? 1 : 0, transform: isProfileMenuOpen ? 'translateY(0) scale(1)' : 'translateY(-10px) scale(0.95)', pointerEvents: isProfileMenuOpen ? 'auto' : 'none', transformOrigin: 'top right' }}>
+                  <div style={{ padding: '12px', borderBottom: '1px solid var(--border-color)', marginBottom: '8px' }}>
+                    <div style={{ fontWeight: '700', fontSize: '0.95rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{user.displayName}</div>
+                    <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{user.email}</div>
+                  </div>
+                  <Link href="/dashboard" onClick={() => setIsProfileMenuOpen(false)} style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 12px', borderRadius: '8px', color: 'var(--text-main)', textDecoration: 'none', fontSize: '0.9rem', fontWeight: '500', transition: 'background-color 0.2s' }}>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                    Dashboard
+                  </Link>
+                  <button onClick={handleLogout} style={{ width: '100%', textAlign: 'left', display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 12px', borderRadius: '8px', color: '#ef4444', backgroundColor: 'transparent', border: 'none', cursor: 'pointer', fontSize: '0.9rem', fontWeight: '500', transition: 'background-color 0.2s' }}>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                    Log out
+                  </button>
+                </div>
+              </div>
             </div>
           ) : (
             <button onClick={handleGoogleLogin} className="btn" style={{ display: 'flex', alignItems: 'center', gap: '8px', backgroundColor: 'var(--card-bg)', color: 'var(--text-main)', border: '1px solid var(--border-color)', cursor: 'pointer', padding: '8px 16px', borderRadius: '8px', fontWeight: '600' }}>
